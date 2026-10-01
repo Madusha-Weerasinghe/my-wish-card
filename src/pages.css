@@ -1,0 +1,434 @@
+/* ========================================
+   BIRTHDAY INSIDE PAGES (01 + 02)
+   Sized in em, like the cover.
+======================================== */
+
+.card-page.bd-page {
+  --ink: #45324f;
+  --rose: #b23a5a;
+  --gold: #c99532;
+
+  font-size: var(--page-font, clamp(12px, 4vw, 16px));
+
+  padding: 0;
+
+  align-items: stretch;
+
+  color: var(--ink);
+
+  background:
+    radial-gradient(circle at 100% 0%, rgba(248, 200, 205, 0.5), transparent 45%),
+    radial-gradient(circle at 0% 100%, rgba(255, 226, 190, 0.5), transparent 45%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.7), transparent 14%),
+    #fffaf4;
+}
+
+.card-page.bd-page::after {
+  content: "";
+
+  position: absolute;
+  inset: 1em;
+
+  border: 1px solid rgba(184, 134, 43, 0.45);
+
+  pointer-events: none;
+
+  z-index: 3;
+}
+
+.bd-page .bd-bunting {
+  height: auto;
+  animation: none;
+}
+
+.bd-sheet {
+  font-size: calc(1em * var(--fit, 1));
+
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  /* top clears the bunting, which does not shrink */
+  padding: calc(6.2 * var(--page-font, 16px)) 2.6em 2.8em;
+}
+
+.bd-num {
+  position: absolute;
+
+  right: 2.2em;
+  bottom: 1.5em;
+
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 0.55em;
+
+  letter-spacing: 0.3em;
+
+  opacity: 0.4;
+}
+
+/* ========================================
+   HANDWRITING
+======================================== */
+
+.hw-line,
+.hw-body,
+.hw-sign,
+.hw-wish {
+  font-family: "Caveat", "Segoe Script", cursive;
+}
+
+.hw-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+
+  margin-bottom: 0.5em;
+}
+
+.hw-label {
+  font-size: 1.7em;
+
+  font-weight: 500;
+
+  margin-right: 0.3em;
+}
+
+/* the fill-in line for the name */
+.hw-name {
+  display: inline-block;
+
+  min-width: 6em;
+
+  padding: 0 0.4em;
+
+  font-family: "Caveat", "Segoe Script", cursive;
+
+  font-size: 2.2em;
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  text-align: center;
+
+  color: var(--rose);
+
+  border-bottom: 2px dotted var(--gold);
+
+  overflow-wrap: anywhere;
+}
+
+.hw-comma {
+  font-family: "Caveat", cursive;
+
+  font-size: 2em;
+
+  color: var(--rose);
+}
+
+/* ========================================
+   LETTER
+======================================== */
+
+.hw-body {
+  font-size: 1.5em;
+
+  line-height: 1.55;
+
+  font-weight: 500;
+
+  /* ruled notepaper lines */
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(1.55em - 1px),
+    rgba(214, 160, 165, 0.32) calc(1.55em - 1px),
+    rgba(214, 160, 165, 0.32) 1.55em
+  );
+}
+
+.hw-body p {
+  margin: 0 0 1.55em;
+
+  font-size: inherit;
+
+  line-height: inherit;
+}
+
+.hw-sign {
+  margin-top: auto;
+
+  padding-top: 0.6em;
+
+  text-align: right;
+}
+
+.hw-with {
+  display: block;
+
+  font-size: 1.5em;
+
+  font-weight: 500;
+}
+
+.hw-sender {
+  display: inline-block;
+
+  min-width: 6em;
+
+  padding: 0 0.4em;
+
+  font-size: 2.3em;
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  text-align: center;
+
+  color: var(--rose);
+
+  border-bottom: 2px dotted var(--gold);
+
+  transform: rotate(-2deg);
+
+  overflow-wrap: anywhere;
+}
+
+/* ========================================
+   WISHES
+======================================== */
+
+.bd-wishes-title {
+  margin: 0;
+
+  text-align: center;
+
+  font-family: "Great Vibes", cursive;
+
+  font-size: 3em;
+
+  font-weight: 400;
+
+  line-height: 1.1;
+
+  background: linear-gradient(
+    115deg,
+    #a87420 0%,
+    #f5dc86 25%,
+    #c99532 50%,
+    #fbecb0 70%,
+    #b98426 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  filter: drop-shadow(0 0.04em 0 rgba(120, 76, 20, 0.3));
+}
+
+.bd-wishes-for {
+  margin: 0.2em 0 1.2em;
+
+  text-align: center;
+
+  font-family: "Cormorant Garamond", Georgia, serif;
+
+  font-style: italic;
+
+  font-size: 1.05em;
+}
+
+.bd-wishes-for .hw-name {
+  min-width: 5em;
+
+  font-size: 1.8em;
+}
+
+.bd-wish-list {
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+}
+
+.bd-wish-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+
+  padding: 0.75em 0;
+
+  border-bottom: 1px dashed rgba(201, 149, 50, 0.5);
+}
+
+.bd-wish-list li:last-child {
+  border-bottom: 0;
+}
+
+.bd-gem {
+  flex: none;
+
+  width: 2.2em;
+  height: 2.2em;
+
+  padding: 0.6em;
+
+  border-radius: 50%;
+
+  background: radial-gradient(circle at 35% 30%, var(--c1), var(--c2));
+
+  box-shadow:
+    inset -0.15em -0.2em 0.4em rgba(60, 10, 30, 0.2),
+    0 0.2em 0.5em rgba(90, 40, 50, 0.18);
+}
+
+.bd-gem svg {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  fill: #ffffff;
+}
+
+.hw-wish {
+  font-size: 1.4em;
+
+  line-height: 1.25;
+
+  font-weight: 500;
+}
+
+.bd-wish-quote {
+  margin: 0.8em 0 0;
+
+  text-align: center;
+
+  font-family: "Cormorant Garamond", Georgia, serif;
+
+  font-style: italic;
+
+  font-size: 1.05em;
+
+  line-height: 1.5;
+
+  opacity: 0.75;
+}
+
+.bd-wish-final {
+  margin: auto 0 0;
+
+  padding-top: 0.8em;
+
+  text-align: center;
+
+  font-family: "Caveat", cursive;
+
+  font-size: 1.9em;
+
+  font-weight: 700;
+
+  color: var(--rose);
+
+  transform: rotate(-1.5deg);
+}
+
+/* ========================================
+   GOOD LUCK PAGE (04)
+======================================== */
+
+.luck-stars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5em;
+
+  height: 2em;
+
+  margin-bottom: 0.3em;
+}
+
+.luck-stars span {
+  display: block;
+
+  width: 1em;
+  height: 1em;
+
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.luck-stars span:nth-child(2) {
+  width: 1.7em;
+  height: 1.7em;
+
+  animation-delay: 0.6s;
+}
+
+.luck-stars span:nth-child(3) {
+  animation-delay: 1.2s;
+}
+
+.luck-stars svg {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  fill: #d4a63c;
+}
+
+.luck-message {
+  margin-top: 0.9em;
+
+  text-align: center;
+
+  font-family: "Caveat", "Segoe Script", cursive;
+
+  font-size: 1.5em;
+
+  line-height: 1.4;
+
+  font-weight: 500;
+}
+
+.luck-message p {
+  margin: 0 0 0.9em;
+}
+
+.luck-cheer {
+  margin: 0.3em 0 0;
+
+  text-align: center;
+
+  font-family: "Great Vibes", cursive;
+
+  font-size: 2.5em;
+
+  line-height: 1.15;
+
+  background: linear-gradient(
+    115deg,
+    #a34a63 0%,
+    #e8a1ae 30%,
+    #c2566f 55%,
+    #f2b8c0 78%,
+    #a34a63 100%
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  filter: drop-shadow(0 0.03em 0 rgba(90, 30, 50, 0.25));
+}

@@ -1,0 +1,894 @@
+/* ========================================
+   BOUQUET
+======================================== */
+
+.flower-glow {
+  position: absolute;
+
+  width: 270px;
+  height: 270px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 214, 205, 0.28);
+
+  filter: blur(36px);
+
+  opacity: 0;
+
+  animation:
+    flowerGlow 2s ease forwards,
+    glowPulse 4.5s ease-in-out 2s infinite;
+}
+
+.bouquet {
+  position: relative;
+
+  width: 260px;
+  height: 330px;
+
+  opacity: 0;
+
+  animation:
+    bouquetAppear 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    bouquetFloat 5.5s ease-in-out 1.6s infinite;
+
+  filter: drop-shadow(0 6px 14px rgba(20, 5, 15, 0.35));
+}
+
+.bouquet-back,
+.bouquet-blooms {
+  position: absolute;
+  inset: 0;
+}
+
+/* ========================================
+   STEMS AND LEAVES
+======================================== */
+
+.stems {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: visible;
+}
+
+.stem {
+  fill: none;
+
+  stroke: #58854b;
+  stroke-width: 3.4;
+  stroke-linecap: round;
+
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+
+  animation: stemDraw 1.3s ease var(--sd) forwards;
+}
+
+.stem.sprig {
+  stroke: #7ea56c;
+  stroke-width: 1.4;
+}
+
+.sprig-head {
+  position: absolute;
+
+  width: 0;
+  height: 0;
+
+  opacity: 0;
+
+  animation: leafGrow2 0.8s ease var(--fd) forwards;
+}
+
+.sprig-head span {
+  position: absolute;
+
+  border-radius: 50%;
+
+  background: radial-gradient(circle at 35% 30%, #ffffff, #efe6f6 70%);
+
+  box-shadow: 0 1px 2px rgba(80, 60, 90, 0.25);
+}
+
+.bouquet-leaf {
+  position: absolute;
+
+  width: calc(50px * var(--l));
+  height: calc(22px * var(--l));
+
+  clip-path: polygon(
+    0 50%,
+    12% 24%,
+    35% 7%,
+    60% 11%,
+    82% 30%,
+    100% 50%,
+    82% 70%,
+    60% 89%,
+    35% 93%,
+    12% 76%
+  );
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 47%,
+      rgba(230, 245, 215, 0.55) 47% 53%,
+      transparent 53%
+    ),
+    linear-gradient(120deg, #9bc286 0%, #4f7d47 100%);
+
+  transform-origin: 0 50%;
+
+  transform: rotate(var(--r)) scale(0);
+
+  animation: leafGrow 0.8s ease var(--ld) forwards;
+}
+
+/* ========================================
+   3D FLOWER HEADS
+   Each petal reads its ring settings from
+   inline custom properties (see bouquet.js).
+======================================== */
+
+.bloom {
+  position: absolute;
+
+  width: 0;
+  height: 0;
+
+  transform: scale(var(--sz));
+}
+
+.flower-head {
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 0;
+  height: 0;
+
+  transform-style: preserve-3d;
+
+  transform: perspective(650px) rotateY(var(--ty)) rotateX(var(--tx))
+    rotateZ(var(--tz));
+
+  animation: headSway 6s ease-in-out var(--sway) infinite;
+}
+
+.petal {
+  --rz: calc(var(--i) * (360deg / var(--n)) + var(--off) + var(--jr));
+
+  position: absolute;
+
+  width: calc(52px * var(--s) * var(--w));
+  height: calc(80px * var(--s));
+
+  left: calc(-26px * var(--s) * var(--w));
+  top: calc(-80px * var(--s));
+
+  border-radius: 50% 50% 46% 46% / 72% 72% 28% 28%;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(255, 255, 255, 0.45),
+      transparent 45%
+    ),
+    linear-gradient(to top, var(--base) 0%, var(--tip) 100%);
+
+  box-shadow:
+    inset 0 0 10px rgba(255, 255, 255, 0.3),
+    inset 0 -8px 14px rgba(90, 30, 40, 0.2),
+    0 2px 6px rgba(70, 30, 40, 0.18);
+
+  transform-origin: 50% 100%;
+
+  transform: translateZ(var(--z)) rotateZ(var(--rz)) rotateX(var(--lift));
+
+  opacity: 0;
+
+  animation: petalBloom 1.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--delay) + var(--i) * 0.05s);
+}
+
+/* soft sheen on the petal surface */
+.petal::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.4),
+    transparent 45%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+
+/* centre vein and fine ribbing */
+.petal::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.16),
+      transparent 60%
+    ) center / 1.5px 85% no-repeat,
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 4px,
+      rgba(255, 255, 255, 0.07) 4px 5px
+    );
+}
+
+.flower-center {
+  position: absolute;
+
+  width: var(--cd);
+  height: var(--cd);
+
+  left: calc(var(--cd) / -2);
+  top: calc(var(--cd) / -2);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.45), transparent 40%),
+    radial-gradient(circle, var(--ca) 0%, var(--cb) 100%);
+
+  box-shadow: 0 3px 8px rgba(60, 40, 20, 0.35);
+
+  transform: translateZ(var(--cz));
+
+  opacity: 0;
+
+  animation: centerAppear 0.8s ease var(--cdelay) forwards;
+}
+
+/* sunflower seed pattern */
+.flower-center.seeds {
+  background:
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.25), transparent 40%),
+    radial-gradient(circle, rgba(255, 210, 110, 0.55) 1px, transparent 1.6px)
+      0 0 / 5px 5px,
+    radial-gradient(circle, var(--ca) 0%, var(--cb) 75%);
+
+  box-shadow:
+    inset 0 0 8px rgba(0, 0, 0, 0.5),
+    0 3px 8px rgba(60, 40, 20, 0.35);
+}
+
+/* ========================================
+   WRAPPING PAPER
+======================================== */
+
+.wrap {
+  position: absolute;
+
+  left: 26px;
+  top: 200px;
+
+  width: 208px;
+  height: 130px;
+
+  opacity: 0;
+
+  animation: leafGrow2 1s ease 0.5s forwards;
+}
+
+.wrap-back {
+  clip-path: polygon(0 0, 100% 0, 56% 100%, 44% 100%);
+
+  background: linear-gradient(to bottom, #d8a2b0, #c98a9c);
+}
+
+.wrap-front {
+  clip-path: polygon(0 26%, 100% 0, 57% 100%, 43% 100%);
+
+  background:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.16) 0 6px,
+      transparent 6px 14px
+    ),
+    linear-gradient(160deg, #fff3ee 0%, #f6cdd3 100%);
+}
+
+/* ========================================
+   BOW
+======================================== */
+
+.bow {
+  position: absolute;
+
+  left: 130px;
+  top: 246px;
+
+  width: 0;
+  height: 0;
+
+  opacity: 0;
+
+  animation: leafGrow2 0.8s ease 1.2s forwards;
+}
+
+.bow-loop,
+.bow-tail,
+.bow-knot {
+  position: absolute;
+
+  background: linear-gradient(135deg, #f7a6b6, #d8496b);
+
+  box-shadow: 0 2px 4px rgba(90, 30, 45, 0.25);
+}
+
+.bow-loop {
+  width: 36px;
+  height: 22px;
+
+  top: -13px;
+
+  border-radius: 50%;
+}
+
+.bow-loop-left {
+  left: -40px;
+  transform: rotate(-16deg);
+}
+
+.bow-loop-right {
+  left: 4px;
+  transform: rotate(16deg);
+}
+
+.bow-tail {
+  width: 10px;
+  height: 34px;
+
+  top: 0;
+
+  border-radius: 2px 2px 0 0;
+
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+}
+
+.bow-tail-left {
+  left: -13px;
+  transform: rotate(12deg);
+}
+
+.bow-tail-right {
+  left: 3px;
+  transform: rotate(-12deg);
+}
+
+.bow-knot {
+  width: 16px;
+  height: 16px;
+
+  left: -8px;
+  top: -9px;
+
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, #e9718b, #c23a5c);
+}
+
+/* ========================================
+   MESSAGE
+======================================== */
+
+.flower-message {
+  position: absolute;
+
+  bottom: 18px;
+
+  width: 100%;
+
+  margin: 0;
+
+  text-align: center;
+
+  font-family: "Great Vibes", cursive;
+
+  font-size: 30px;
+
+  line-height: 1.2;
+
+  padding: 0 0.2em;
+
+  background: linear-gradient(
+    100deg,
+    #c99532 0%,
+    #fbecb0 30%,
+    #f5dc86 50%,
+    #fbecb0 70%,
+    #c99532 100%
+  );
+  background-size: 250% 100%;
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  filter: drop-shadow(0 1px 2px rgba(20, 5, 15, 0.4));
+
+  opacity: 0;
+
+  transform: translateY(15px);
+
+  animation:
+    messageAppear 1.4s ease 2.8s forwards,
+    messageShine 4s ease-in-out 4s infinite;
+}
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes bouquetAppear {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flowerGlow {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0.35;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes petalBloom {
+  0% {
+    opacity: 0;
+    transform: translateZ(var(--z)) rotateZ(var(--rz)) rotateX(-4deg)
+      scale(0.25);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateZ(var(--z)) rotateZ(var(--rz)) rotateX(var(--lift))
+      scale(1);
+  }
+}
+
+@keyframes headSway {
+  0%,
+  100% {
+    transform: perspective(650px) rotateY(calc(var(--ty) - 4deg))
+      rotateX(var(--tx)) rotateZ(calc(var(--tz) - 3deg));
+  }
+
+  50% {
+    transform: perspective(650px) rotateY(calc(var(--ty) + 4deg))
+      rotateX(calc(var(--tx) - 4deg)) rotateZ(calc(var(--tz) + 3deg));
+  }
+}
+
+@keyframes centerAppear {
+  from {
+    opacity: 0;
+    transform: translateZ(var(--cz)) scale(0.3);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateZ(var(--cz)) scale(1);
+  }
+}
+
+@keyframes stemDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes leafGrow {
+  from {
+    transform: rotate(var(--r)) scale(0);
+  }
+
+  to {
+    transform: rotate(var(--r)) scale(1);
+  }
+}
+
+@keyframes leafGrow2 {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes messageAppear {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .flower-scene {
+    transform: scale(0.88);
+  }
+
+  .flower-message {
+    font-size: 27px;
+  }
+}
+
+/* ========================================
+   STAGE EFFECTS
+   Rays, aura, sparkles, motes, petals and
+   the burst that plays when the bouquet
+   has finished opening.
+======================================== */
+
+.flower-fx {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.flower-fx > * {
+  position: absolute;
+}
+
+/* breathing colour aura */
+.fx-aura {
+  left: 50%;
+  top: calc(50% - 60px);
+
+  width: min(120vw, 620px);
+  height: min(120vw, 620px);
+
+  margin: calc(min(120vw, 620px) / -2) 0 0 calc(min(120vw, 620px) / -2);
+
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 170, 190, 0.16) 0%,
+    rgba(214, 90, 130, 0.08) 40%,
+    transparent 66%
+  );
+
+  opacity: 0;
+
+  animation:
+    fxFadeIn 2s ease 0.4s forwards,
+    auraBreath 5s ease-in-out 2.4s infinite;
+}
+
+.fx-vignette {
+  inset: 0;
+
+  background: radial-gradient(
+    circle at 50% 45%,
+    transparent 55%,
+    rgba(10, 2, 8, 0.55) 100%
+  );
+}
+
+/* four-point twinkling stars */
+.fx-spark,
+.glint {
+  width: var(--s, var(--gs));
+  height: var(--s, var(--gs));
+
+  background: radial-gradient(circle, #fffbe0 0 18%, #f5dc86 45%, transparent 70%);
+
+  clip-path: polygon(
+    50% 0,
+    62% 38%,
+    100% 50%,
+    62% 62%,
+    50% 100%,
+    38% 62%,
+    0 50%,
+    38% 38%
+  );
+
+  opacity: 0;
+}
+
+.fx-spark {
+  filter: none;
+  animation: twinkle var(--t) ease-in-out var(--d) infinite;
+}
+
+.fx-spark.rose {
+  background: radial-gradient(circle, #ffffff 0 18%, #ffb3c4 45%, transparent 70%);
+}
+
+.bouquet-glints {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+}
+
+.glint {
+  position: absolute;
+
+  margin: calc(var(--gs) / -2) 0 0 calc(var(--gs) / -2);
+
+  animation: twinkle var(--gt) ease-in-out var(--gd) infinite;
+}
+
+/* glowing motes drifting up */
+.fx-mote {
+  bottom: -20px;
+
+  width: var(--s);
+  height: var(--s);
+
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    #fff6d0,
+    rgba(245, 220, 134, 0.6) 50%,
+    transparent 72%
+  );
+
+  box-shadow: 0 0 4px rgba(245, 200, 120, 0.3);
+
+  opacity: 0;
+
+  animation: moteRise var(--t) linear var(--d) infinite;
+}
+
+/* petals drifting down */
+.fx-petal {
+  top: -30px;
+
+  width: var(--s);
+  height: calc(var(--s) * 1.4);
+
+  opacity: 0;
+
+  animation: petalFall var(--t) linear var(--d) infinite;
+}
+
+.fx-petal i {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 80% 0 80% 0;
+
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), var(--c));
+
+  box-shadow: none;
+
+  animation: petalTumble 3s ease-in-out var(--d) infinite;
+}
+
+/* burst as the bouquet finishes opening */
+.fx-burst {
+  left: 50%;
+  top: calc(50% - 95px);
+
+  width: 0;
+  height: 0;
+}
+
+.fx-burst-dot {
+  position: absolute;
+
+  left: -3px;
+  top: -3px;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #fff3b8;
+
+  box-shadow: 0 0 4px rgba(255, 210, 120, 0.5);
+
+  opacity: 0;
+
+  animation: burstOut 1.6s cubic-bezier(0.16, 0.8, 0.3, 1) 2.5s forwards;
+}
+
+.fx-burst-dot.big {
+  width: 9px;
+  height: 9px;
+
+  left: -4.5px;
+  top: -4.5px;
+
+  background: #ffc2d0;
+}
+
+/* ========================================
+   STAGE KEYFRAMES
+======================================== */
+
+@keyframes fxFadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes auraBreath {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(0.97);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes bouquetFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-7px) rotate(0.6deg);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+
+  50% {
+    opacity: 0.75;
+    transform: scale(0.85) rotate(45deg);
+  }
+}
+
+@keyframes moteRise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  15% {
+    opacity: 0.6;
+  }
+
+  85% {
+    opacity: 0.45;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), -105vh);
+  }
+}
+
+@keyframes petalFall {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  10% {
+    opacity: 0.9;
+  }
+
+  90% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--sw), 110vh);
+  }
+}
+
+@keyframes petalTumble {
+  0%,
+  100% {
+    transform: rotate(-30deg) rotateY(0deg);
+  }
+
+  50% {
+    transform: rotate(40deg) rotateY(160deg);
+  }
+}
+
+@keyframes burstOut {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--a)) translateX(0) scale(0.4);
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateX(var(--r)) scale(1);
+  }
+}
+
+@keyframes messageShine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}

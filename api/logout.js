@@ -1,0 +1,18 @@
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      success: false,
+    });
+  }
+
+  res.setHeader(
+    "Set-Cookie",
+    ["card_session=", "HttpOnly", "Path=/", "SameSite=Lax", "Max-Age=0"].join(
+      "; ",
+    ),
+  );
+
+  return res.status(200).json({
+    success: true,
+  });
+}

@@ -1,0 +1,1456 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&family=Caveat:wght@500;700&family=Great+Vibes&display=swap");
+
+/* ==================================================
+   RESET
+================================================== */
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  min-height: 100%;
+
+  overscroll-behavior: none;
+}
+
+/* blush backdrop, drawn on html so it covers the whole screen on phones */
+html {
+  --night:
+    radial-gradient(circle at 50% 30%, rgba(190, 80, 110, 0.35), transparent 60%),
+    radial-gradient(circle at 90% 90%, rgba(120, 40, 80, 0.5), transparent 55%),
+    linear-gradient(165deg, #3a1a2e 0%, #2a1122 55%, #1d0b18 100%);
+
+  min-height: 100dvh;
+
+  background: var(--night);
+
+  background-attachment: fixed;
+}
+
+/* ==================================================
+   BODY
+================================================== */
+
+body {
+  background: transparent;
+
+  color: #403532;
+
+  font-family: "Cormorant Garamond", Georgia, serif;
+
+  overflow-x: hidden;
+
+  /*
+    Prevent the browser from interpreting
+    horizontal swipes as navigation/scrolling.
+  */
+  touch-action: pan-y;
+}
+
+/* ==================================================
+   APP
+================================================== */
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==================================================
+   CARD SCENE
+================================================== */
+
+.scene {
+  width: 100%;
+
+  height: 100vh;
+  height: 100dvh;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 50px 10px 20px;
+
+  /*
+    Keep page-flip gestures inside the card.
+  */
+  touch-action: pan-y;
+}
+
+/* ==================================================
+   CARD
+================================================== */
+
+.wish-card {
+  margin: auto;
+
+  position: relative;
+
+  transform: translateY(36px) scale(0.94);
+
+  transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+
+  will-change: transform;
+
+  /*
+    Important for touch devices.
+  */
+  touch-action: pan-y;
+}
+
+/*
+  The flipping page is rotated in 3D, so its back face (which is
+  mirrored) can be projected below the card while it turns. Clip
+  everything the flip draws to the book area.
+*/
+.wish-card .stf__block {
+  overflow: hidden;
+}
+
+/*
+  Soft ground shadow. A drop-shadow filter on the whole card is
+  repainted every frame of the flip; this is drawn once.
+*/
+.wish-card::after {
+  content: "";
+
+  position: absolute;
+
+  left: 6%;
+  right: 6%;
+  bottom: -14px;
+
+  height: 28px;
+
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(70, 50, 40, 0.28),
+    transparent 70%
+  );
+
+  filter: blur(6px);
+
+  z-index: -1;
+
+  pointer-events: none;
+}
+
+.wish-card.is-flipping .card-page *,
+.wish-card.is-flipping .card-page::before,
+.wish-card.is-flipping .card-page::after {
+  animation-play-state: paused !important;
+}
+
+/* ==================================================
+   CARD ENTRANCE
+================================================== */
+
+#card-scene.visible .wish-card {
+  transform: translateY(0) scale(1);
+}
+
+/* ==================================================
+   CARD PAGES
+================================================== */
+
+.card-page {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 50px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  /*
+    Makes the page feel like a physical card.
+  */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ==================================================
+   PAPER TEXTURE
+================================================== */
+
+.card-page::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity: 0.035;
+
+  background-image: radial-gradient(
+    rgba(60, 45, 30, 0.8) 0.6px,
+    transparent 0.6px
+  );
+
+  background-size: 5px 5px;
+}
+
+/* ==================================================
+   FRONT COVER
+================================================== */
+
+.cover {
+  background: linear-gradient(135deg, #ead8c8, #dfc6b4);
+
+  color: #46352e;
+
+  text-align: center;
+
+  border: 1px solid rgba(90, 60, 45, 0.08);
+}
+
+/* ==================================================
+   COVER INNER BORDER
+================================================== */
+
+.cover::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 18px;
+
+  border: 1px solid rgba(80, 55, 40, 0.2);
+
+  pointer-events: none;
+}
+
+/* ==================================================
+   COVER CONTENT
+================================================== */
+
+.cover .cover-content {
+  position: relative;
+
+  z-index: 2;
+}
+
+.cover-content {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  position: relative;
+
+  z-index: 2;
+}
+
+/* ==================================================
+   EYEBROW
+================================================== */
+
+.eyebrow {
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 4px;
+
+  margin: 0 0 25px;
+
+  opacity: 0.65;
+}
+
+/* ==================================================
+   COVER TITLE
+================================================== */
+
+.cover h1 {
+  margin: 0;
+
+  font-size: clamp(48px, 8vw, 76px);
+
+  line-height: 0.9;
+
+  font-weight: 500;
+
+  letter-spacing: -2px;
+}
+
+/* ==================================================
+   RECIPIENT NAME
+================================================== */
+
+.recipient-name {
+  max-width: 90%;
+
+  overflow-wrap: anywhere;
+
+  word-break: break-word;
+}
+
+/* ==================================================
+   HEART
+================================================== */
+
+.heart {
+  font-size: 48px;
+
+  margin: 30px 0;
+
+  font-family: Georgia, serif;
+}
+
+/* ==================================================
+   OPEN HINT
+================================================== */
+
+.open-hint {
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  opacity: 0.55;
+
+  margin: 0;
+}
+
+/* ==================================================
+   COVER DECORATIONS
+================================================== */
+
+.cover-decoration {
+  position: absolute;
+
+  font-size: 20px;
+
+  opacity: 0.5;
+
+  z-index: 2;
+}
+
+.decoration-top {
+  top: 45px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+.decoration-bottom {
+  bottom: 45px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+}
+
+/* ==================================================
+   INSIDE PAGES
+================================================== */
+
+.inside-page {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.6), transparent 20%), #fffaf5;
+}
+
+/* ==================================================
+   INSIDE PAGE BORDER
+================================================== */
+
+.inside-page::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 22px;
+
+  border: 1px solid rgba(90, 70, 55, 0.08);
+
+  pointer-events: none;
+}
+
+/* ==================================================
+   PAGE CONTENT
+================================================== */
+
+.page-inner {
+  width: 100%;
+
+  max-width: 290px;
+
+  text-align: center;
+
+  position: relative;
+
+  z-index: 2;
+}
+
+/* ==================================================
+   PAGE NUMBER
+================================================== */
+
+.page-number {
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 9px;
+
+  letter-spacing: 3px;
+
+  opacity: 0.4;
+}
+
+/* ==================================================
+   ORNAMENT
+================================================== */
+
+.ornament {
+  font-size: 28px;
+
+  margin: 25px 0 15px;
+
+  opacity: 0.65;
+}
+
+/* ==================================================
+   PAGE HEADING
+================================================== */
+
+.page-inner h2 {
+  font-size: clamp(27px, 5vw, 38px);
+
+  font-weight: 500;
+
+  line-height: 1.1;
+
+  margin: 0 0 25px;
+}
+
+/* ==================================================
+   PAGE TEXT
+================================================== */
+
+.page-inner p {
+  font-size: 17px;
+
+  line-height: 1.8;
+
+  margin: 0 0 20px;
+
+  overflow-wrap: break-word;
+}
+
+/* ==================================================
+   SECONDARY MESSAGE
+================================================== */
+
+.secondary-message {
+  margin-top: 24px;
+}
+
+/* ==================================================
+   QUOTE
+================================================== */
+
+.quote {
+  font-size: 19px;
+
+  font-style: italic;
+
+  line-height: 1.6;
+
+  margin-top: 30px;
+
+  opacity: 0.75;
+}
+
+/* ==================================================
+   SIGNATURE
+================================================== */
+
+.signature {
+  font-style: italic;
+
+  opacity: 0.65;
+}
+
+/* ==================================================
+   PHOTO
+================================================== */
+
+.photo-frame {
+  width: 82%;
+
+  max-width: 280px;
+
+  padding: 10px;
+
+  margin: 22px auto;
+
+  background: #ffffff;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+
+  transform: rotate(-2deg);
+
+  transition: transform 0.4s ease;
+}
+
+.photo-frame img {
+  width: 100%;
+
+  aspect-ratio: 4 / 5;
+
+  display: block;
+
+  object-fit: cover;
+
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .photo-frame:hover {
+    transform: rotate(0deg) scale(1.02);
+  }
+}
+
+/* ==================================================
+   BACK COVER
+================================================== */
+
+.back-cover {
+  background: linear-gradient(135deg, #ead8c8, #dfc6b4);
+
+  text-align: center;
+
+  color: #46352e;
+}
+
+/* ==================================================
+   BACK COVER LIGHT
+================================================== */
+
+.back-cover::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(255, 255, 255, 0.35),
+    transparent 45%
+  );
+}
+
+/* ==================================================
+   BACK COVER TEXT
+================================================== */
+
+.back-text {
+  font-size: 20px;
+
+  line-height: 1.6;
+
+  margin: 0;
+}
+
+/* ==================================================
+   SMALL ORNAMENT
+================================================== */
+
+.small-ornament {
+  font-size: 11px;
+
+  letter-spacing: 5px;
+
+  opacity: 0.5;
+
+  margin-top: 30px;
+}
+
+/* ==================================================
+   OPENING SCREEN
+================================================== */
+
+.opening-screen {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 100;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: var(--night);
+
+  color: #f8dfe0;
+
+  transition:
+    opacity 0.8s ease,
+    visibility 0.8s ease;
+
+  /*
+    Prevent scrolling while opening screen
+    is visible.
+  */
+  touch-action: manipulation;
+}
+
+/* ==================================================
+   OPENING SCREEN HIDDEN
+================================================== */
+
+.opening-screen.hidden {
+  opacity: 0;
+
+  visibility: hidden;
+
+  pointer-events: none;
+}
+
+/* ==================================================
+   OPENING CONTENT
+================================================== */
+
+.opening-content {
+  width: min(90%, 500px);
+
+  text-align: center;
+
+  padding: 30px;
+}
+
+/* ==================================================
+   OPENING HEART
+================================================== */
+
+.opening-heart {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: 70px;
+
+  line-height: 1;
+
+  margin-bottom: 20px;
+
+  animation: gentleFloat 2.5s ease-in-out infinite;
+}
+
+/* ==================================================
+   OPENING EYEBROW
+================================================== */
+
+.opening-eyebrow {
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 12px;
+
+  letter-spacing: 4px;
+
+  text-transform: uppercase;
+
+  margin-bottom: 12px;
+}
+
+/* ==================================================
+   OPENING TITLE
+================================================== */
+
+.opening-content h1 {
+  font-family: "Cormorant Garamond", serif;
+
+  font-size: clamp(42px, 8vw, 68px);
+
+  font-weight: 500;
+
+  line-height: 1;
+
+  margin: 0 0 15px;
+
+  overflow-wrap: anywhere;
+}
+
+/* ==================================================
+   OPENING TEXT
+================================================== */
+
+.opening-text {
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  opacity: 0.7;
+
+  margin-bottom: 30px;
+}
+
+/* ==================================================
+   OPEN CARD BUTTON
+================================================== */
+
+#open-card-btn {
+  border: 1px solid rgba(245, 220, 134, 0.7);
+
+  background: transparent;
+
+  color: #f5dc86;
+
+  padding: 13px 32px;
+
+  min-height: 46px;
+
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 13px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+
+  touch-action: manipulation;
+}
+
+#open-card-btn:hover {
+  background: #f5dc86;
+
+  color: #2a1122;
+
+  transform: translateY(-2px);
+}
+
+#open-card-btn:active {
+  transform: scale(0.97);
+}
+
+/* ==================================================
+   CARD VISIBILITY
+================================================== */
+
+#card-scene {
+  opacity: 0;
+
+  visibility: hidden;
+
+  transition:
+    opacity 1.4s ease 0.3s,
+    visibility 0s linear 1.7s;
+}
+
+#card-scene.visible {
+  opacity: 1;
+
+  visibility: visible;
+
+  transition:
+    opacity 1.4s ease 0.3s,
+    visibility 0s;
+}
+
+/* ==================================================
+   MUSIC BUTTON
+================================================== */
+
+.card-dock {
+  position: fixed;
+
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+
+  z-index: 150;
+
+  display: flex;
+  gap: 4px;
+
+  padding: 4px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 250, 246, 0.82);
+
+  border: 1px solid rgba(178, 58, 90, 0.18);
+
+  box-shadow: 0 6px 18px rgba(120, 50, 70, 0.16);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(-10px);
+
+  transition:
+    opacity 0.4s ease,
+    visibility 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-dock.visible {
+  opacity: 1;
+  visibility: visible;
+
+  transform: translateY(0);
+}
+
+.dock-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  min-width: 44px;
+  height: 44px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: #b23a5a;
+
+  font-family: "DM Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+
+.dock-btn svg {
+  width: 22px;
+  height: 22px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dock-btn:active {
+  transform: scale(0.92);
+  background: rgba(178, 58, 90, 0.14);
+}
+
+.dock-btn:focus-visible {
+  outline: 2px solid #b23a5a;
+  outline-offset: 1px;
+}
+
+/* labels only where there is room (desktop) */
+.dock-label {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .dock-btn {
+    padding: 0 14px 0 12px;
+  }
+
+  .dock-label {
+    display: inline;
+  }
+}
+
+/* music: slash appears when it is off */
+.music-toggle .ico-slash {
+  opacity: 0;
+}
+
+.music-toggle.is-off {
+  color: #9a8790;
+}
+
+.music-toggle.is-off .ico-slash {
+  opacity: 1;
+}
+
+/* ==================================================
+   DOCK HOVER
+================================================== */
+
+@media (hover: hover) {
+  .dock-btn:hover {
+    background: rgba(178, 58, 90, 0.1);
+  }
+}
+
+
+/* ==================================================
+   ANIMATION
+================================================== */
+
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 600px) {
+  /* room for the control dock above the card */
+  .scene {
+    padding-top: calc(max(12px, env(safe-area-inset-top)) + 60px);
+  }
+
+  .scene {
+    padding-left: max(10px, env(safe-area-inset-left));
+    padding-right: max(10px, env(safe-area-inset-right));
+    padding-bottom: max(15px, env(safe-area-inset-bottom));
+  }
+
+  body {
+    /*
+      Prevent horizontal browser movement.
+    */
+    overflow-x: hidden;
+  }
+
+  .scene {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    padding: 15px 10px;
+  }
+
+  .opening-content {
+    width: 92%;
+
+    padding: 20px;
+  }
+
+  .opening-heart {
+    font-size: 58px;
+
+    margin-bottom: 15px;
+  }
+
+  .opening-eyebrow {
+    font-size: 10px;
+
+    letter-spacing: 3px;
+  }
+
+  .opening-content h1 {
+    font-size: 46px;
+
+    max-width: 100%;
+  }
+
+  .opening-text {
+    font-size: 14px;
+
+    margin-bottom: 25px;
+  }
+
+  #open-card-btn {
+    padding: 12px 28px;
+
+    min-height: 46px;
+  }
+
+  /*
+    Reduce page padding on smaller screens.
+  */
+
+  .card-page {
+    padding: 25px;
+  }
+
+  .page-inner {
+    max-width: 260px;
+
+    padding: 20px 15px;
+  }
+
+  .page-number {
+    font-size: 8px;
+  }
+
+  .ornament {
+    font-size: 25px;
+
+    margin: 18px 0 12px;
+  }
+
+  .page-inner h2 {
+    font-size: 27px;
+
+    margin-bottom: 18px;
+  }
+
+  .page-inner p {
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-bottom: 15px;
+  }
+
+  .quote {
+    font-size: 17px;
+
+    line-height: 1.5;
+
+    margin-top: 20px;
+  }
+
+  .photo-frame {
+    width: 78%;
+
+    max-width: 220px;
+
+    padding: 8px;
+
+    margin: 18px auto;
+  }
+
+  .inside-page::after {
+    inset: 12px;
+  }
+
+  .cover::after {
+    inset: 12px;
+  }
+
+  .cover h1 {
+    font-size: 48px;
+  }
+
+  .recipient-name {
+    font-size: 42px !important;
+  }
+
+  .heart {
+    font-size: 42px;
+
+    margin: 22px 0;
+  }
+
+  .open-hint {
+    font-size: 9px;
+
+    letter-spacing: 1.5px;
+  }
+
+  .decoration-top {
+    top: 30px;
+  }
+
+  .decoration-bottom {
+    bottom: 30px;
+  }
+
+  .back-text {
+    font-size: 18px;
+  }
+
+  .small-ornament {
+    margin-top: 20px;
+  }
+
+}
+
+/* ==================================================
+   VERY SMALL PHONES
+================================================== */
+
+@media (max-width: 380px) {
+  .scene {
+    padding: 10px 5px;
+  }
+
+  .opening-content h1 {
+    font-size: 40px;
+  }
+
+  .card-page {
+    padding: 18px;
+  }
+
+  .page-inner {
+    max-width: 235px;
+
+    padding: 15px 10px;
+  }
+
+  .page-inner h2 {
+    font-size: 24px;
+  }
+
+  .page-inner p {
+    font-size: 13px;
+
+    line-height: 1.6;
+  }
+
+  .photo-frame {
+    max-width: 190px;
+  }
+
+  .recipient-name {
+    font-size: 36px !important;
+  }
+}
+
+/* ==================================================
+   PHONE: keep the card clear of the control dock
+================================================== */
+
+@media (max-width: 600px) {
+  .scene {
+    padding-top: calc(max(12px, env(safe-area-inset-top)) + 58px);
+  }
+}
+
+/* ==================================================
+   REDUCE MOTION
+================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==================================================
+   ACCESS FORM
+================================================== */
+
+.access-form {
+  width: min(100%, 320px);
+
+  margin: 0 auto;
+}
+
+/* ==================================================
+   ACCESS CODE INPUT
+================================================== */
+
+#access-code {
+  width: 100%;
+
+  height: 48px;
+
+  padding: 0 16px;
+
+  border: 1px solid rgba(248, 223, 224, 0.3);
+
+  background: rgba(255, 255, 255, 0.08);
+
+  color: #fbe9e6;
+
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 14px;
+
+  text-align: center;
+
+  outline: none;
+
+  border-radius: 0;
+
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+#access-code::placeholder {
+  color: rgba(248, 223, 224, 0.55);
+}
+
+#access-code:focus {
+  border-color: #f5dc86;
+
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ==================================================
+   UNLOCK BUTTON
+================================================== */
+
+#unlock-card-btn {
+  width: 100%;
+
+  height: 48px;
+
+  margin-top: 12px;
+
+  border: 1px solid transparent;
+
+  background: linear-gradient(135deg, #f5dc86, #c99532);
+
+  color: #2a1122;
+
+  font-weight: 500;
+
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 12px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
+}
+
+#unlock-card-btn:hover {
+  transform: translateY(-2px);
+}
+
+#unlock-card-btn:active {
+  transform: scale(0.98);
+}
+
+#unlock-card-btn:disabled {
+  opacity: 0.6;
+
+  cursor: wait;
+
+  transform: none;
+}
+
+/* ==================================================
+   ACCESS ERROR
+================================================== */
+
+.access-error {
+  min-height: 20px;
+
+  margin: 12px 0 0;
+
+  font-family: "DM Sans", sans-serif;
+
+  font-size: 12px;
+
+  color: #ffb3bf;
+
+  opacity: 0.9;
+}
+
+/* ========================================
+   FLOWER REVEAL
+======================================== */
+
+.flower-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+background: var(--night);
+
+  color: #f8dfe0;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 1s ease,
+    visibility 1s ease;
+}
+
+.flower-reveal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.flower-reveal.fade-out {
+  opacity: 0;
+}
+
+.flower-scene {
+  position: relative;
+
+  width: 280px;
+  height: 450px;
+  padding-bottom: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==================================================
+   FLOWER -> CARD TRANSITION
+================================================== */
+
+.flower-reveal {
+  transition:
+    opacity 1.4s ease,
+    visibility 1.4s ease;
+}
+
+.flower-reveal .flower-scene {
+  transition:
+    transform 1.9s cubic-bezier(0.5, 0, 0.75, 0.4),
+    opacity 1.7s ease 0.3s,
+    filter 1.7s ease 0.3s;
+}
+
+/* the gust leans the bouquet away and it fades as the petals leave */
+.flower-reveal.wind .flower-scene {
+  transform: translateX(38px) rotate(4deg) skewX(-7deg);
+
+  opacity: 0;
+
+  filter: blur(4px);
+}
+
+.flower-reveal.wind .flower-fx {
+  opacity: 0;
+
+  transition: opacity 1.5s ease 0.2s;
+}
+
+
+/* ==================================================
+   WIND PETALS
+================================================== */
+
+.wind-layer {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1100;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+.wind-petal {
+  position: absolute;
+
+  width: var(--s);
+  height: calc(var(--s) * 1.4);
+
+  opacity: 0;
+
+  animation: windAcross var(--dur) cubic-bezier(0.45, 0, 0.9, 0.6) var(--delay) forwards;
+}
+
+.wind-petal i {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 80% 0 80% 0;
+
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), var(--c));
+
+  animation:
+    windWave calc(var(--dur) / 2.2) ease-in-out var(--delay) infinite alternate,
+    windTumble var(--dur) linear var(--delay) forwards;
+}
+
+@keyframes windAcross {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(1);
+  }
+}
+
+@keyframes windWave {
+  from {
+    margin-top: calc(var(--wave) / -2);
+  }
+
+  to {
+    margin-top: calc(var(--wave) / 2);
+  }
+}
+
+@keyframes windTumble {
+  to {
+    transform: rotate(var(--rot)) rotateY(540deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .flower-reveal.wind .flower-scene {
+    transform: translateX(30px) rotate(4deg) skewX(-7deg) scale(0.88);
+  }
+}
